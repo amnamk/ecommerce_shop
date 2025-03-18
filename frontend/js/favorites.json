@@ -1,0 +1,34 @@
+{
+  "favorites": [
+    {
+      "id": 1,
+      "image": "images/c_formal_gray_shirt.png",
+      "name": "Gray Shirt",
+      "price": "$45.50"
+    },
+    {
+      "id": 2,
+      "image": "images/c_pant_girl.png",
+      "name": "Pant for Girls",
+      "price": "$35.00"
+    },
+    {
+      "id": 3,
+      "image": "images/c_polo-shirt.png",
+      "name": "Polo Shirt",
+      "price": "$50.00"
+    },
+    {
+      "id": 4,
+      "image": "images/c_western-shirt.png",
+      "name": "Western Shirt",
+      "price": "$55.00"
+    },
+    {
+      "id": 4,
+      "image": "images/c_formal_gray_shirt.png",
+      "name": " Shirt",
+      "price": "$55.00"
+    }
+  ]
+}

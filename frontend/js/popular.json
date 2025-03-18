@@ -1,0 +1,55 @@
+{
+  "popularProducts": {
+    "topRated": [
+      {
+        "name": "Blue Shirt",
+        "price": "$20.00",
+        "image": "images/top_rated_1.jpg"
+      },
+      {
+        "name": "Red Shirt",
+        "price": "$25.00",
+        "image": "images/top_rated_2.jpg"
+      },
+      {
+        "name": "Green Shirt",
+        "price": "$30.00",
+        "image": "images/top_rated_3.jpg"
+      }
+    ],
+    "bestSelling": [
+      {
+        "name": "Blue Shirt",
+        "price": "$20.00",
+        "image": "images/best_selling_1.jpg"
+      },
+      {
+        "name": "Yellow Shirt",
+        "price": "$22.00",
+        "image": "images/best_selling_2.jpg"
+      },
+      {
+        "name": "Black Shirt",
+        "price": "$28.00",
+        "image": "images/best_selling_3.jpg"
+      }
+    ],
+    "onSale": [
+      {
+        "name": "Blue Shirt",
+        "price": "$20.00",
+        "image": "images/on_sale_1.jpg"
+      },
+      {
+        "name": "Pink Shirt",
+        "price": "$18.00",
+        "image": "images/on_sale_2.jpg"
+      },
+      {
+        "name": "Gray Shirt",
+        "price": "$15.00",
+        "image": "images/on_sale_3.jpg"
+      }
+    ]
+  }
+}
