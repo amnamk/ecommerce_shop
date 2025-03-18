@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "title": "Fashion Trends for 2025: What's In and What's Out",
+    "author": "Jane Smith",
+    "description": "As we look ahead to the new year, fashion trends for 2025 promise to bring bold colors, oversized silhouettes, and a return to vintage styles...",
+    "image": "images/blog_1.jpg"
+  },
+  {
+    "id": 2,
+    "title": "How to Style Your Favorite CLOthes Pieces This Season",
+    "author": "Anna Joe",
+    "description": "With the changing season, it’s the perfect time to refresh your wardrobe with the latest styles from CLOthes...",
+    "image": "images/blog_2.jpg"
+  },
+  {
+    "id": 3,
+    "title": "The Ultimate Guide to Sustainable Fashion",
+    "author": "Robert Jenner",
+    "description": "Sustainable fashion is more than just a trend—it’s a lifestyle. At CLOthes, we believe that style doesn’t have to come at the cost of the planet...",
+    "image": "images/blog_3.jpg"
+  }
+]

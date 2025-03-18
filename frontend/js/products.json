@@ -1,0 +1,76 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Gray Shirt",
+      "price": "$45.50",
+      "image": "images/c_formal_gray_shirt.png",
+      "category": "men",
+      "description": "A stylish gray shirt perfect for formal occasions."
+    },
+    {
+      "id": 2,
+      "name": "Pant for Girls",
+      "price": "$35.00",
+      "image": "images/c_pant_girl.png",
+      "category": "women",
+      "description": "Comfortable pants designed for girls, suitable for casual wear."
+    },
+    {
+      "id": 3,
+      "name": "Polo Shirt",
+      "price": "$50.00",
+      "image": "images/c_polo-shirt.png",
+      "category": "men",
+      "description": "A classic polo shirt, ideal for both casual and semi-formal events."
+    },
+    {
+      "id": 4,
+      "name": "Shirt for Girls",
+      "price": "$40.50",
+      "image": "images/c_shirt-girl.png",
+      "category": "women",
+      "description": "A fashionable shirt designed specifically for girls."
+    },
+    {
+      "id": 5,
+      "name": "Men's T-shirt",
+      "price": "$30.00",
+      "image": "images/c_t-shirt_men.png",
+      "category": "men",
+      "description": "A comfortable and trendy t-shirt for men."
+    },
+    {
+      "id": 6,
+      "name": "Tunic Shirt for Girls",
+      "price": "$42.50",
+      "image": "images/c_tunic-shirt_girl.png",
+      "category": "women",
+      "description": "A beautiful tunic shirt designed for girls, perfect for casual outings."
+    },
+    {
+      "id": 7,
+      "name": "Undershirt",
+      "price": "$25.00",
+      "image": "images/c_undershirt.png",
+      "category": "accessories",
+      "description": "A simple, essential undershirt for everyday wear."
+    },
+    {
+      "id": 8,
+      "name": "Western Shirt",
+      "price": "$55.00",
+      "image": "images/c_western-shirt.png",
+      "category": "accessories",
+      "description": "A stylish western shirt, ideal for adding flair to any outfit."
+    },
+    {
+      "id": 9,
+      "name": "Shirt",
+      "price": "$45.50",
+      "image": "images/c_formal_gray_shirt.png",
+      "category": "sale",
+      "description": "A stylish gray shirt perfect for formal occasions."
+    }
+  ]
+}

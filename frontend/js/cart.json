@@ -1,0 +1,32 @@
+{
+  "cartItems": [
+    {
+      "id": 1,
+      "name": "Gray Shirt",
+      "price": 45.5,
+      "image": "images/c_formal_gray_shirt.png",
+      "quantity": 1
+    },
+    {
+      "id": 2,
+      "name": "Girls Pants",
+      "price": 35.0,
+      "image": "images/c_pant_girl.png",
+      "quantity": 1
+    },
+    {
+      "id": 3,
+      "name": "Pants",
+      "price": 60.0,
+      "image": "images/c_pant_girl.png",
+      "quantity": 1
+    },
+    {
+      "id": 4,
+      "name": "Pants",
+      "price": 60.0,
+      "image": "images/c_pant_girl.png",
+      "quantity": 1
+    }
+  ]
+}

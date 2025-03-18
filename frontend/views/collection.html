@@ -1,0 +1,39 @@
+<section id="collection" class="py-5 mt-5">
+  <div class="container">
+    <div class="title text-center mt-5">
+      <h2 class="position-relative d-inline-block">New Collection</h2>
+    </div>
+
+    <div class="mb-4 text-center mt-5">
+      <input
+        type="text"
+        id="searchInput"
+        class="form-control w-50 mx-auto"
+        placeholder="Search products..."
+      />
+    </div>
+
+    <div class="text-center mb-4">
+      <button class="btn btn-outline-dark filter-btn" data-category="all">
+        All
+      </button>
+      <button class="btn btn-outline-dark filter-btn" data-category="men">
+        Men
+      </button>
+      <button class="btn btn-outline-dark filter-btn" data-category="women">
+        Women
+      </button>
+      <button
+        class="btn btn-outline-dark filter-btn"
+        data-category="accessories"
+      >
+        Accessories
+      </button>
+      <button class="btn btn-outline-dark filter-btn" data-category="sale">
+        Sale
+      </button>
+    </div>
+
+    <div id="collection-list" class="row g-4 mt-3"></div>
+  </div>
+</section>
