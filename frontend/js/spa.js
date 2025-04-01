@@ -238,6 +238,11 @@ $(document).ready(function () {
   });
 
   app.route({
+    view: "admin",
+    load: "admin_dashboard.html",
+  });
+
+  app.route({
     view: "favorites",
     load: "favorites.html",
     onCreate: function () {
