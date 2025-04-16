@@ -1,6 +1,6 @@
 <?php
 require_once 'BaseService.php';
-require_once 'GeneralDao.php';
+require_once  __DIR__ .'/../dao/GeneralDao.php';
 
 class GeneralService extends BaseService {
 
@@ -17,6 +17,17 @@ class GeneralService extends BaseService {
 
     public function getByAuthor($author) {
         return $this->dao->getByAuthor($author);
+    }
+    public function delete($id) {
+        $this->dao->delete($id);
+    }
+
+    public function create($data) {
+        return $this->dao->insert($data);
+    }
+
+    public function getAll() {
+        return $this->dao->getAll();
     }
 }
 ?>

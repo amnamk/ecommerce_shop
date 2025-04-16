@@ -1,6 +1,6 @@
 <?php
 require_once 'BaseService.php';
-require_once 'CartDao.php';
+require_once  __DIR__ .'/../dao/CartDao.php';
 
 class CartService extends BaseService {
     
@@ -22,10 +22,14 @@ class CartService extends BaseService {
     }
 
     public function getCartItems($userId): array {
-        $regularProducts = $this->dao->getCartRegularProducts($userId);
-        $specialProducts = $this->dao->getCartSpecialProducts($userId);
-        
-        return array_merge($regularProducts, $specialProducts);
+        return $this->dao->getAllCartProducts($userId);
+    }
+
+    public function create($data){
+        return $this->dao->insert($data);
+    }
+
+    public function delete($id) {
+        return $this->dao->delete($id);
     }
 }
-?>
