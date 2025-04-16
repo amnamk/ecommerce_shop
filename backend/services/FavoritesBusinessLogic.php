@@ -8,88 +8,61 @@ class FavoritesBusinessLogic {
         $this->favoritesService = new FavoritesService();
     }
 
-    public function getFavoritesByUserId($userId) {
+    public function getFavoritesByUserId($userId): array {
         if (empty($userId)) {
-            throw new Exception('User ID cannot be empty.');
+            throw new Exception('User ID is required.');
         }
 
-        $favorites = $this->favoritesService->getByUserId($userId);
-
-        if (empty($favorites)) {
-            throw new Exception('No favorites found for the provided user ID.');
-        }
-
-        return $favorites;
+        return $this->favoritesService->getByUserId($userId);
     }
 
-    public function getFavoriteByProductId($productId) {
+    public function getFavoriteByProductId($productId): array {
         if (empty($productId)) {
-            throw new Exception('Product ID cannot be empty.');
+            throw new Exception('Product ID is required.');
         }
 
-        $favoriteProduct = $this->favoritesService->getByProductId($productId);
-
-        if (empty($favoriteProduct)) {
-            throw new Exception('No favorite found for the provided product ID.');
-        }
-
-        return $favoriteProduct;
+        return $this->favoritesService->getByProductId($productId);
     }
 
-    public function getFavoriteProducts($userId) {
+    public function getFavoriteProducts($userId): array {
         if (empty($userId)) {
-            throw new Exception('User ID cannot be empty.');
+            throw new Exception('User ID is required.');
         }
 
-        $favoriteProducts = $this->favoritesService->getFavoriteProducts($userId);
-
-        if (empty($favoriteProducts)) {
-            throw new Exception('No favorite products found for the provided user ID.');
-        }
-
-        return $favoriteProducts;
+        return $this->favoritesService->getFavoriteProducts($userId);
     }
 
-    public function getFavoriteSpecialProducts($userId) {
+    public function getFavoriteSpecialProducts($userId): array {
         if (empty($userId)) {
-            throw new Exception('User ID cannot be empty.');
+            throw new Exception('User ID is required.');
         }
 
-        $favoriteSpecialProducts = $this->favoritesService->getFavoriteSpecialProducts($userId);
-
-        if (empty($favoriteSpecialProducts)) {
-            throw new Exception('No favorite special products found for the provided user ID.');
-        }
-
-        return $favoriteSpecialProducts;
+        return $this->favoritesService->getFavoriteSpecialProducts($userId);
     }
 
     public function delete($id) {
-        return $this->favoritesService->delete($id); 
+        if (empty($id)) {
+            throw new Exception('Favorite ID is required.');
+        }
+
+        return $this->favoritesService->delete($id);
     }
 
-    public function getAll($id) {
-        return $this->favoritesService->delete($id); 
-    }
-
+   
     public function insert($data) {
+        if (empty($data['user_id']) || (!isset($data['product_id']) && !isset($data['specialproduct_id']))) {
+            throw new Exception('User ID and either Product ID or Special Product ID are required.');
+        }
+
         return $this->favoritesService->create($data);
     }
 
     public function getAllFavorites($userId) {
         if (empty($userId)) {
-            throw new Exception('User ID cannot be empty.');
+            throw new Exception('User ID is required.');
         }
 
-        $userId = trim($userId);
-
-        $favorites = $this->favoritesService->getAllFavoriteProducts($userId);
-
-        if (empty($favorites)) {
-            throw new Exception('No favorite products or special products found for the given user.');
-        }
-
-        return $favorites;
+        return $this->favoritesService->getAllFavoriteProducts($userId);
     }
 }
 ?>

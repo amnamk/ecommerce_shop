@@ -9,74 +9,49 @@ class FavoritesController {
     }
 
     public function handleRequest() {
-        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-            if (isset($_GET['user_id'])) {
-                try {
-                    $favorites = $this->favoritesBusinessLogic->getFavoritesByUserId($_GET['user_id']);
-                    echo json_encode(['message' => 'Favorites retrieved successfully.', 'data' => $favorites]);
-                } catch (Exception $e) {
-                    echo json_encode(['error' => $e->getMessage()]);
-                }
-            } elseif (isset($_GET['product_id'])) {
-                try {
-                    $favoriteProduct = $this->favoritesBusinessLogic->getFavoriteByProductId($_GET['product_id']);
-                    echo json_encode(['message' => 'Favorite product retrieved successfully.', 'data' => $favoriteProduct]);
-                } catch (Exception $e) {
-                    echo json_encode(['error' => $e->getMessage()]);
-                }
-            } elseif (isset($_GET['all'])) {
-                try {
-                    $favorites = $this->favoritesBusinessLogic->getAllFavorites($_GET['user_id']);
-                    echo json_encode(['message' => 'All favorites retrieved successfully.', 'data' => $favorites]);
-                } catch (Exception $e) {
-                    echo json_encode(['error' => $e->getMessage()]);
-                }
-            } else {
-                echo json_encode(['error' => 'Invalid parameters.']);
-            }
-        }
-
-        if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = $_POST;
-            if (empty($_POST['id'])) {
-                echo json_encode(['error' => 'Favorite ID is required for deletion.']);
-                return;
-            }
 
             try {
-                $this->favoritesBusinessLogic->delete($_POST['id']);
-                echo json_encode(['message' => 'Favorite item deleted successfully.']);
+                $result = $this->favoritesBusinessLogic->insert($data);
+                echo json_encode(['message' => 'Favorite added successfully.', 'data' => $result]);
             } catch (Exception $e) {
                 echo json_encode(['error' => $e->getMessage()]);
             }
         }
 
-      
-            if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
-                $data = $_POST;
-                if (empty($data['user_id'])) {
-                    echo json_encode(['error' => 'User ID cannot be empty.']);
-                    return;
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            try {
+                if (isset($_GET['user_id']) && isset($_GET['type'])) {
+                    $userId = $_GET['user_id'];
+                    $type = $_GET['type'];
+
+                    if ($type === 'product') {
+                        $favorites = $this->favoritesBusinessLogic->getFavoriteProducts($userId);
+                    } elseif ($type === 'special') {
+                        $favorites = $this->favoritesBusinessLogic->getFavoriteSpecialProducts($userId);
+                    } elseif ($type === 'all') {
+                        $favorites = $this->favoritesBusinessLogic->getAllFavorites($userId);
+                    } else {
+                        throw new Exception("Invalid type parameter.");
+                    }
+
+                    echo json_encode($favorites);
+                } elseif (isset($_GET['user_id'])) {
+                    $favorites = $this->favoritesBusinessLogic->getFavoritesByUserId($_GET['user_id']);
+                    echo json_encode($favorites);
+                } elseif (isset($_GET['product_id'])) {
+                    $favorites = $this->favoritesBusinessLogic->getFavoriteByProductId($_GET['product_id']);
+                    echo json_encode($favorites);
+                } else {
+                    echo json_encode(['error' => 'Missing required GET parameters.']);
                 }
-    
-                
-                if (empty($data['product_id']) && empty($data['specialproduct_id'])) {
-                    echo json_encode(['error' => 'Either Product ID or Special Product ID must be provided.']);
-                    return;
-                }
-    
-                
-                try {
-                    
-                    $result = $this->favoritesBusinessLogic->insert($data);
-    
-                    
-                    echo json_encode(['message' => 'Favorite added successfully.', 'data' => $result]);
-                } catch (Exception $e) {
-                    echo json_encode(['error' => $e->getMessage()]);
-                }
+            } catch (Exception $e) {
+                echo json_encode(['error' => $e->getMessage()]);
             }
         }
-    }
 
+        
+    }
+}
 ?>

@@ -1,6 +1,6 @@
 <?php
 require_once 'BaseService.php';
-require_once 'UserDao.php';
+require_once  __DIR__ .'/../dao/UserDao.php';
 
 class UserService extends BaseService {
    
@@ -14,8 +14,12 @@ class UserService extends BaseService {
         return $this->dao->getUserByEmail($email);
     }
 
+    public function getAll(){
+        return $this->dao->getAll();
+    }
+
     public function insertUser($user) {
-        return $this->dao->insertUser($user);
+        return $this->dao->insert($user);
     }
 
     public function getUserByRole($role) {
@@ -24,6 +28,10 @@ class UserService extends BaseService {
 
     public function updatePassword($email, $newPassword) {
         return $this->dao->updatePassword($email, $newPassword);
+    }
+
+    public function delete($id) {
+        return $this->dao->delete($id);
     }
 
     

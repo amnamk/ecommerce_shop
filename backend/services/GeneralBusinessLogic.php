@@ -45,6 +45,14 @@ class GeneralBusinessLogic {
         return $results;
     }
 
+    public function createEntry($data): bool {
+        if (empty($data['title']) || empty($data['author'])) {
+            throw new Exception('Both title and author are required.');
+        }
+
+        return $this->generalService->create($data); 
+    }
+
 
 }
 ?>

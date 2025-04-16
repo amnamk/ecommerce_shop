@@ -1,6 +1,6 @@
 <?php
 require_once 'BaseService.php';
-require_once 'FavoritesDao.php';
+require_once  __DIR__ .'/../dao/FavoritesDao.php';
 
 class FavoritesService extends BaseService {
     public function __construct() {
@@ -26,5 +26,12 @@ class FavoritesService extends BaseService {
 
     public function getAllFavoriteProducts($userId) {
         return $this->dao->getAllFavoriteProducts($userId);
+    }
+    public function delete($id) {
+        return $this->dao->delete($id);
+    }
+
+    public function create($data) {
+        return $this->dao->insert($data);
     }
 }
