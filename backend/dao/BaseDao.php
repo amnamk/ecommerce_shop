@@ -26,6 +26,8 @@ class BaseDao {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    
+
     public function insert($data) {
         $columns = implode(", ", array_keys($data));
         $placeholders = ":" . implode(", :", array_keys($data));

@@ -54,6 +54,52 @@ class UserDao extends BaseDao {
         return $stmt->execute();
     }
 
+
+    public function getByUserId($id) {
+    $stmt = $this->connection->prepare(
+        "SELECT * FROM " . $this->table . " WHERE " . $this->primaryKey . " = :id"
+    );
+    $stmt->bindParam(':id', $id);
+    $stmt->execute();
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+public function updateUser($id, $data) {
+    $fields = [];
+    $params = [':id' => $id];
+ 
+     unset($data['id']);
+    if (isset($data['email'])) {
+        $fields[] = "email = :email";
+        $params[':email'] = $data['email'];
+    }
+    if (isset($data['name'])) {
+        $fields[] = "name = :name";
+        $params[':name'] = $data['name'];
+    }
+    if (isset($data['role'])) {
+        $fields[] = "role = :role";
+        $params[':role'] = $data['role'];
+    }
+    
+
+    if (empty($fields)) {
+        return false;  
+    }
+
+    $sql = "UPDATE users SET " . implode(", ", $fields) . " WHERE user_id = :id";
+    $stmt = $this->connection->prepare($sql);
+
+    foreach ($params as $key => $value) {
+        $stmt->bindValue($key, $value);
+    }
+
+    return $stmt->execute();
+}
+
+
+
+
     
 
 

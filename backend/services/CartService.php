@@ -32,4 +32,12 @@ class CartService extends BaseService {
     public function delete($id) {
         return $this->dao->delete($id);
     }
+
+     public function updateItemQuantity($cartItemId, $quantity) {
+        if ($quantity < 1) {
+            throw new Exception("Quantity must be at least 1");
+        }
+
+        return $this->dao->updateCartItemQuantity($cartItemId, $quantity);
+    }
 }

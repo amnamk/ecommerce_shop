@@ -20,6 +20,9 @@
 * )
 */
 Flight::route('GET /cart/user/@user_id', function($user_id){
+   $token = Flight::request()->getHeader("Authentication");
+   Flight::auth_middleware()->verifyToken($token);
+   Flight::auth_middleware()->authorizeRoles([Roles::ADMIN, Roles::USER]);
    Flight::json(Flight::cartService()->getCartByUserId($user_id));
 });
 
@@ -42,6 +45,9 @@ Flight::route('GET /cart/user/@user_id', function($user_id){
 * )
 */
 Flight::route('GET /cart/regular/user/@user_id', function($user_id){
+   $token = Flight::request()->getHeader("Authentication");
+   Flight::auth_middleware()->verifyToken($token);
+   Flight::auth_middleware()->authorizeRoles([Roles::ADMIN, Roles::USER]);
    Flight::json(Flight::cartService()->getCartRegularProducts($user_id));
 });
 
@@ -64,6 +70,9 @@ Flight::route('GET /cart/regular/user/@user_id', function($user_id){
 * )
 */
 Flight::route('GET /cart/special/user/@user_id', function($user_id){
+   $token = Flight::request()->getHeader("Authentication");
+   Flight::auth_middleware()->verifyToken($token);
+   Flight::auth_middleware()->authorizeRoles([Roles::ADMIN, Roles::USER]);
    Flight::json(Flight::cartService()->getCartSpecialProducts($user_id));
 });
 
@@ -86,6 +95,9 @@ Flight::route('GET /cart/special/user/@user_id', function($user_id){
 * )
 */
 Flight::route('GET /cart/items/user/@user_id', function($user_id){
+   $token = Flight::request()->getHeader("Authentication");
+   Flight::auth_middleware()->verifyToken($token);
+   Flight::auth_middleware()->authorizeRoles([Roles::ADMIN, Roles::USER]);
    Flight::json(Flight::cartService()->getCartItems($user_id));
 });
 
@@ -108,6 +120,9 @@ Flight::route('GET /cart/items/user/@user_id', function($user_id){
 * )
 */
 Flight::route('DELETE /cart/item/@id', function($id){
+   $token = Flight::request()->getHeader("Authentication");
+   Flight::auth_middleware()->verifyToken($token);
+   Flight::auth_middleware()->authorizeRoles([Roles::ADMIN, Roles::USER]);
    Flight::cartService()->delete($id);
    Flight::json(['status' => 'success', 'message' => 'Item deleted successfully']);
 });
@@ -132,9 +147,58 @@ Flight::route('DELETE /cart/item/@id', function($id){
 * )
 */
 Flight::route('POST /cart', function(){
+   $token = Flight::request()->getHeader("Authentication");
+   Flight::auth_middleware()->verifyToken($token);
+   Flight::auth_middleware()->authorizeRoles([Roles::ADMIN, Roles::USER]);
     $data = Flight::request()->data->getData();
     Flight::cartService()->create($data);
     Flight::json(['status' => 'success', 'message' => 'Item added to cart']);
 });
+
+/**
+* @OA\Put(
+*     path="/cart/item/{id}",
+*     tags={"cart"},
+*     summary="Update quantity of an item in the cart",
+*     @OA\Parameter(
+*         name="id",
+*         in="path",
+*         required=true,
+*         description="ID of the cart item to update",
+*         @OA\Schema(type="integer", example=1)
+*     ),
+*     @OA\RequestBody(
+*         required=true,
+*         @OA\JsonContent(
+*             required={"quantity"},
+*             @OA\Property(property="quantity", type="integer", example=3)
+*         )
+*     ),
+*     @OA\Response(
+*         response=200,
+*         description="Cart item updated successfully"
+*     ),
+*     @OA\Response(
+*         response=400,
+*         description="Invalid quantity"
+*     )
+* )
+*/
+Flight::route('PUT /cart/item/@id', function($id) {
+    $token = Flight::request()->getHeader("Authentication");
+    Flight::auth_middleware()->verifyToken($token);
+    Flight::auth_middleware()->authorizeRoles([Roles::ADMIN, Roles::USER]);
+
+    $data = Flight::request()->data->getData();
+    $quantity = isset($data['quantity']) ? intval($data['quantity']) : null;
+
+    if ($quantity === null || $quantity < 1) {
+        Flight::halt(400, 'Invalid quantity.');
+    }
+
+    $result = Flight::cartService()->updateItemQuantity($id, $quantity);
+    Flight::json(["message" => "Cart item updated successfully", "result" => $result]);
+});
+
 
 ?>

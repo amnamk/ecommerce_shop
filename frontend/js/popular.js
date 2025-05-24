@@ -1,58 +1,48 @@
 $(document).ready(function () {
-  function renderPopularProducts(data) {
-    var topRatedContainer = $("#top-rated-container");
-    topRatedContainer.empty();
-    data.topRated.forEach(function (product) {
-      var productHTML = `
-          <div class="d-flex align-items-start justify-content-start">
-            <img src="${product.image}" alt="${product.name}" class="img-fluid pe-3 w-25" />
-            <div>
-              <p class="mb-0">${product.name}</p>
-              <span>${product.price}</span>
-            </div>
-          </div>
-        `;
-      topRatedContainer.append(productHTML);
-    });
+  function fetchTopThreeProducts() {
+    const token = localStorage.getItem("user_token");
+    if (!token) {
+      console.error("No authentication token found.");
+      return;
+    }
 
-    var bestSellingContainer = $("#best-selling-container");
-    bestSellingContainer.empty();
-    data.bestSelling.forEach(function (product) {
-      var productHTML = `
-          <div class="d-flex align-items-start justify-content-start">
-            <img src="${product.image}" alt="${product.name}" class="img-fluid pe-3 w-25" />
-            <div>
-              <p class="mb-0">${product.name}</p>
-              <span>${product.price}</span>
-            </div>
-          </div>
-        `;
-      bestSellingContainer.append(productHTML);
-    });
-
-    var onSaleContainer = $("#on-sale-container");
-    onSaleContainer.empty();
-    data.onSale.forEach(function (product) {
-      var productHTML = `
-          <div class="d-flex align-items-start justify-content-start">
-            <img src="${product.image}" alt="${product.name}" class="img-fluid pe-3 w-25" />
-            <div>
-              <p class="mb-0">${product.name}</p>
-              <span>${product.price}</span>
-            </div>
-          </div>
-        `;
-      onSaleContainer.append(productHTML);
+    $.ajax({
+      url: "http://localhost/web_ecommerce_shop/backend/products",
+      method: "GET",
+      headers: {
+        Authentication: token,
+      },
+      success: function (products) {
+        if (Array.isArray(products)) {
+          renderTopThree(products.slice(0, 3));
+        } else {
+          console.error("Unexpected response format:", products);
+        }
+      },
+      error: function (xhr, status, error) {
+        console.error("Failed to fetch products:", xhr.responseText || error);
+      },
     });
   }
 
-  function fetchPopularProducts() {
-    $.getJSON("js/popular.json", function (data) {
-      renderPopularProducts(data.popularProducts);
-    }).fail(function (error) {
-      console.error("Error fetching popular products data:", error);
+  function renderTopThree(products) {
+    const container = $("#top-three-products");
+    container.empty();
+
+    products.forEach((product) => {
+      const productHTML = `
+  <div class="border p-3 mb-2 d-flex align-items-center justify-content-between">
+    <div class="product-info" style="flex: 1; padding-right: 15px;">
+      <h5 class="mb-1">${product.name}</h5>
+      <p class="mb-0">${product.description}</p>
+    </div>
+    <img src="${product.picture}" alt="${product.name}" style="width: 100px; height: auto; object-fit: contain;">
+  </div>
+`;
+
+      container.append(productHTML);
     });
   }
 
-  fetchPopularProducts();
+  fetchTopThreeProducts();
 });

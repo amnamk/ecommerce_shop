@@ -12,6 +12,9 @@
 * )
 */
 Flight::route('GET /products', function() {
+    $token = Flight::request()->getHeader("Authentication");
+    Flight::auth_middleware()->verifyToken($token);
+    Flight::auth_middleware()->authorizeRoles([Roles::ADMIN, Roles::USER]);
     Flight::json(Flight::productService()->getAllProducts());
 });
 
@@ -35,6 +38,9 @@ Flight::route('GET /products', function() {
 * )
 */
 Flight::route('GET /products/@id', function($id) {
+    $token = Flight::request()->getHeader("Authentication");
+    Flight::auth_middleware()->verifyToken($token);
+    Flight::auth_middleware()->authorizeRoles([Roles::ADMIN, Roles::USER]);
     Flight::json(Flight::productService()->getById($id));
 });
 
@@ -58,6 +64,9 @@ Flight::route('GET /products/@id', function($id) {
 * )
 */
 Flight::route('GET /products/category/@category', function($category) {
+    $token = Flight::request()->getHeader("Authentication");
+    Flight::auth_middleware()->verifyToken($token);
+    Flight::auth_middleware()->authorizeRoles([Roles::ADMIN, Roles::USER]);
     Flight::json(Flight::productService()->getByCategory($category));
 });
 
@@ -87,6 +96,9 @@ Flight::route('GET /products/category/@category', function($category) {
 * )
 */
 Flight::route('POST /products', function() {
+    $token = Flight::request()->getHeader("Authentication");
+    Flight::auth_middleware()->verifyToken($token);
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
     $data = Flight::request()->data->getData();
     $result = Flight::productService()->create($data);
     Flight::json(["message" => "Product created successfully", "id" => $result]);
@@ -119,6 +131,9 @@ Flight::route('POST /products', function() {
 * )
 */
 Flight::route('PUT /products/@id/stock/@quantity', function($id, $quantity) {
+    $token = Flight::request()->getHeader("Authentication");
+    Flight::auth_middleware()->verifyToken($token);
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
     $result = Flight::productService()->updateStockQuantity($id, $quantity);
     Flight::json(["message" => "Stock updated successfully", "result" => $result]);
 });
@@ -143,6 +158,9 @@ Flight::route('PUT /products/@id/stock/@quantity', function($id, $quantity) {
 * )
 */
 Flight::route('DELETE /products/@id', function($id) {
+    $token = Flight::request()->getHeader("Authentication");
+    Flight::auth_middleware()->verifyToken($token);
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
     Flight::productService()->delete($id);
     Flight::json(["message" => "Product deleted successfully"]);
 });

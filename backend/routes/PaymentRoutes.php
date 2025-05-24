@@ -12,6 +12,9 @@
 * )
 */
 Flight::route('GET /payments', function() {
+    $token = Flight::request()->getHeader("Authentication");
+    Flight::auth_middleware()->verifyToken($token);
+    Flight::auth_middleware()->authorizeRoles([Roles::ADMIN, Roles::USER]);
     Flight::json(Flight::paymentService()->getAllPayments());
 });
 
@@ -35,6 +38,9 @@ Flight::route('GET /payments', function() {
 * )
 */
 Flight::route('GET /payments/state/@state', function($state) {
+    $token = Flight::request()->getHeader("Authentication");
+    Flight::auth_middleware()->verifyToken($token);
+    Flight::auth_middleware()->authorizeRoles([Roles::ADMIN, Roles::USER]);
     Flight::json(Flight::paymentService()->getPaymentsByState($state));
 });
 
@@ -64,6 +70,9 @@ Flight::route('GET /payments/state/@state', function($state) {
 * )
 */
 Flight::route('POST /payments', function() {
+    $token = Flight::request()->getHeader("Authentication");
+    Flight::auth_middleware()->verifyToken($token);
+    Flight::auth_middleware()->authorizeRoles([Roles::ADMIN, Roles::USER]);
     $data = Flight::request()->data->getData();
     $result = Flight::paymentService()->create($data);
     Flight::json(["message" => "Payment created successfully", "id" => $result]);
@@ -89,6 +98,9 @@ Flight::route('POST /payments', function() {
 * )
 */
 Flight::route('DELETE /payments/@id', function($id) {
+    $token = Flight::request()->getHeader("Authentication");
+    Flight::auth_middleware()->verifyToken($token);
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
     Flight::paymentService()->delete($id);
     Flight::json(["message" => "Payment deleted successfully"]);
 });

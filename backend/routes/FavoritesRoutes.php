@@ -19,6 +19,9 @@
 * )
 */
 Flight::route('GET /favorites/user/@userId', function($userId) {
+    $token = Flight::request()->getHeader("Authentication");
+   Flight::auth_middleware()->verifyToken($token);
+    Flight::auth_middleware()->authorizeRoles([Roles::ADMIN, Roles::USER]);
     Flight::json(Flight::favoritesService()->getByUserId($userId));
 });
 
@@ -42,6 +45,9 @@ Flight::route('GET /favorites/user/@userId', function($userId) {
 * )
 */
 Flight::route('GET /favorites/product/@productId', function($productId) {
+    $token = Flight::request()->getHeader("Authentication");
+   Flight::auth_middleware()->verifyToken($token);
+    Flight::auth_middleware()->authorizeRoles([Roles::ADMIN, Roles::USER]);
     Flight::json(Flight::favoritesService()->getByProductId($productId));
 });
 
@@ -65,6 +71,9 @@ Flight::route('GET /favorites/product/@productId', function($productId) {
 * )
 */
 Flight::route('GET /favorites/products/@userId', function($userId) {
+    $token = Flight::request()->getHeader("Authentication");
+   Flight::auth_middleware()->verifyToken($token);
+    Flight::auth_middleware()->authorizeRoles([Roles::ADMIN, Roles::USER]);
     Flight::json(Flight::favoritesService()->getFavoriteProducts($userId));
 });
 
@@ -88,6 +97,9 @@ Flight::route('GET /favorites/products/@userId', function($userId) {
 * )
 */
 Flight::route('GET /favorites/special-products/@userId', function($userId) {
+    $token = Flight::request()->getHeader("Authentication");
+    Flight::auth_middleware()->verifyToken($token);
+    Flight::auth_middleware()->authorizeRoles([Roles::ADMIN, Roles::USER]);
     Flight::json(Flight::favoritesService()->getFavoriteSpecialProducts($userId));
 });
 
@@ -111,6 +123,9 @@ Flight::route('GET /favorites/special-products/@userId', function($userId) {
 * )
 */
 Flight::route('GET /favorites/all/@userId', function($userId) {
+    $token = Flight::request()->getHeader("Authentication");
+    Flight::auth_middleware()->verifyToken($token);
+    Flight::auth_middleware()->authorizeRoles([Roles::ADMIN, Roles::USER]);
     Flight::json(Flight::favoritesService()->getAllFavoriteProducts($userId));
 });
 
@@ -135,6 +150,9 @@ Flight::route('GET /favorites/all/@userId', function($userId) {
 * )
 */
 Flight::route('POST /favorites', function() {
+    $token = Flight::request()->getHeader("Authentication");
+    Flight::auth_middleware()->verifyToken($token);
+    Flight::auth_middleware()->authorizeRoles([Roles::ADMIN, Roles::USER]);
     $data = Flight::request()->data->getData();
     Flight::favoritesService()->create($data);
     Flight::json(["message" => "Favorite added successfully"]);
@@ -160,6 +178,9 @@ Flight::route('POST /favorites', function() {
 * )
 */
 Flight::route('DELETE /favorites/@id', function($id) {
+    $token = Flight::request()->getHeader("Authentication");
+    Flight::auth_middleware()->verifyToken($token);
+    Flight::auth_middleware()->authorizeRoles([Roles::ADMIN, Roles::USER]);
     Flight::favoritesService()->delete($id);
     Flight::json(["message" => "Favorite deleted successfully"]);
 });

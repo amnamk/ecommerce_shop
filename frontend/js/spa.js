@@ -1,5 +1,6 @@
+var app;
 $(document).ready(function () {
-  var app = $.spapp({
+  app = $.spapp({
     defaultView: "home",
     templateDir: "./views/",
     pageNotFound: "404.html",
@@ -187,6 +188,32 @@ $(document).ready(function () {
     });
 
     attachCartItemEventListeners();
+  }
+
+  function renderFavorites() {
+    const favoritesContainer = $("#favorites-container");
+    favoritesContainer.empty();
+
+    const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+    if (favorites.length === 0) {
+      favoritesContainer.append("<p>No favorites yet.</p>");
+      return;
+    }
+
+    favorites.forEach((product) => {
+      const productHTML = `
+      <div class="product-item">
+        <img src="${product.image}" alt="${product.name}" class="product-item-image">
+        <div class="product-item-details">
+          <h3>${product.name}</h3>
+          <p>${product.description}</p>
+          <p>Price: $${product.price}</p>
+        </div>
+      </div>
+    `;
+      favoritesContainer.append(productHTML);
+    });
   }
 
   function renderBlogs(blogs) {

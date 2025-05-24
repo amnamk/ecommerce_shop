@@ -11,6 +11,10 @@
       rel="stylesheet"
       href="../bootstrap-5.0.2-dist/css/bootstrap.min.css"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"
+    />
 
     <link
       rel="stylesheet"
@@ -42,7 +46,7 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navMenu">
-          <ul class="navbar-nav mx-auto text-center">
+          <ul class="navbar-nav mx-auto text-center" id="tabs">
             <li class="nav-item px-2 py-2">
               <a class="nav-link text-dark" href="#home">Home</a>
             </li>
@@ -112,5 +116,17 @@
     </footer>
 
     <script src="../bootstrap-5.0.2-dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.min.js"></script>
+    <script src="services/admin-service.js"></script>
+    <script src="services/user-service.js"></script>
+    <script src="utils/utils.js"></script>
+    <script src="utils/constants.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        UserService.generateMenuItems();
+      });
+    </script>
   </body>
 </html>

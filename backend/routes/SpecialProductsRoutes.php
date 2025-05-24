@@ -12,6 +12,9 @@
 * )
 */
 Flight::route('GET /special-products/available', function() {
+    $token = Flight::request()->getHeader("Authentication");
+    Flight::auth_middleware()->verifyToken($token);
+    Flight::auth_middleware()->authorizeRoles([Roles::ADMIN, Roles::USER]);
     Flight::json(Flight::specialProductService()->getAvailableProducts());
 });
 
@@ -35,8 +38,46 @@ Flight::route('GET /special-products/available', function() {
 * )
 */
 Flight::route('GET /special-products/discount/@discount', function($discount) {
+    $token = Flight::request()->getHeader("Authentication");
+    Flight::auth_middleware()->verifyToken($token);
+    Flight::auth_middleware()->authorizeRoles([Roles::ADMIN, Roles::USER]);
     Flight::json(Flight::specialProductService()->getByDiscount($discount));
 });
+
+/**
+* @OA\Get(
+*     path="/specialproducts/{id}",
+*     tags={"specialproducts"},
+*     summary="Get special product by ID",
+*     @OA\Parameter(
+*         name="id",
+*         in="path",
+*         required=true,
+*         description="ID of the special product to retrieve",
+*         @OA\Schema(type="integer", example=1)
+*     ),
+*     @OA\Response(
+*         response=200,
+*         description="Returns the special product with the specified ID"
+*     ),
+*     @OA\Response(
+*         response=401,
+*         description="Unauthorized"
+*     ),
+*     @OA\Response(
+*         response=403,
+*         description="Forbidden"
+*     ),
+*     security={{"bearerAuth":{}}}
+* )
+*/
+Flight::route('GET /specialproducts/@id', function($id) {
+    $token = Flight::request()->getHeader("Authentication");
+    Flight::auth_middleware()->verifyToken($token);
+    Flight::auth_middleware()->authorizeRoles([Roles::ADMIN, Roles::USER]);
+    Flight::json(Flight::specialProductService()->getById($id));
+});
+
 
 
 /**
@@ -58,6 +99,9 @@ Flight::route('GET /special-products/discount/@discount', function($discount) {
 * )
 */
 Flight::route('GET /special-products/search/@name', function($name) {
+    $token = Flight::request()->getHeader("Authentication");
+    Flight::auth_middleware()->verifyToken($token);
+    Flight::auth_middleware()->authorizeRoles([Roles::ADMIN, Roles::USER]);
     Flight::json(Flight::specialProductService()->searchByName($name));
 });
 
@@ -88,6 +132,9 @@ Flight::route('GET /special-products/search/@name', function($name) {
 * )
 */
 Flight::route('POST /special-products', function() {
+    $token = Flight::request()->getHeader("Authentication");
+    Flight::auth_middleware()->verifyToken($token);
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
     $data = Flight::request()->data->getData();
     $result = Flight::specialProductService()->create($data);
     Flight::json(["message" => "Special product created successfully", "id" => $result]);
@@ -120,6 +167,9 @@ Flight::route('POST /special-products', function() {
 * )
 */
 Flight::route('PUT /special-products/@id/stock/@quantity', function($id, $quantity) {
+    $token = Flight::request()->getHeader("Authentication");
+    Flight::auth_middleware()->verifyToken($token);
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
     $result = Flight::specialProductService()->updateStock($id, $quantity);
     Flight::json(["message" => "Stock updated successfully", "result" => $result]);
 });
@@ -144,6 +194,9 @@ Flight::route('PUT /special-products/@id/stock/@quantity', function($id, $quanti
 * )
 */
 Flight::route('DELETE /special-products/@id', function($id) {
+    $token = Flight::request()->getHeader("Authentication");
+    Flight::auth_middleware()->verifyToken($token);
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
     Flight::specialProductService()->delete($id);
     Flight::json(["message" => "Special product deleted successfully"]);
 });

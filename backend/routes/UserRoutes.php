@@ -1,5 +1,5 @@
-<?php
 
+<?php
 /**
 * @OA\Get(
 *     path="/user/{email}",
@@ -19,6 +19,9 @@
 * )
 */
 Flight::route('GET /user/@email', function($email){
+   $token = Flight::request()->getHeader("Authentication");
+   Flight::auth_middleware()->verifyToken($token);
+   Flight::auth_middleware()->authorizeRoles([Roles::ADMIN, Roles::USER]);
    Flight::json(Flight::userService()->getUserByEmail($email));
 });
 
@@ -34,6 +37,9 @@ Flight::route('GET /user/@email', function($email){
 * )
 */
 Flight::route('GET /users/all', function(){
+   $token = Flight::request()->getHeader("Authentication");
+   Flight::auth_middleware()->verifyToken($token);
+   Flight::auth_middleware()->authorizeRoles([Roles::ADMIN, Roles::USER]);
    Flight::json(Flight::userService()->getAll());
 });
 
@@ -56,6 +62,9 @@ Flight::route('GET /users/all', function(){
 * )
 */
 Flight::route('GET /users', function(){
+   $token = Flight::request()->getHeader("Authentication");
+   Flight::auth_middleware()->verifyToken($token);
+   Flight::auth_middleware()->authorizeRoles([Roles::ADMIN, Roles::USER]);
    $role = Flight::request()->query['role'] ?? null;
    Flight::json(Flight::userService()->getUserByRole($role));
 });
@@ -82,6 +91,9 @@ Flight::route('GET /users', function(){
 * )
 */
 Flight::route('POST /user', function(){
+   $token = Flight::request()->getHeader("Authentication");
+   Flight::auth_middleware()->verifyToken($token);
+   Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
    $data = Flight::request()->data->getData();
    Flight::json(Flight::userService()->insertUser($data));
 });
@@ -113,6 +125,35 @@ Flight::route('PUT /user/password', function(){
 });
 
 /**
+* @OA\Get(
+*     path="/user/{id}",
+*     tags={"user"},
+*     summary="Get user by ID",
+*     @OA\Parameter(
+*         name="id",
+*         in="path",
+*         required=true,
+*         description="ID of the user to fetch",
+*         @OA\Schema(type="integer", example=1)
+*     ),
+*     @OA\Response(
+*         response=200,
+*         description="User retrieved successfully"
+*     ),
+*     @OA\Response(
+*         response=404,
+*         description="User not found"
+*     )
+* )
+*/
+Flight::route('GET /user/@id', function($id){
+   $token = Flight::request()->getHeader("Authentication");
+   Flight::auth_middleware()->verifyToken($token);
+   Flight::auth_middleware()->authorizeRoles([Roles::ADMIN, Roles::USER]);
+   Flight::json(Flight::userService()->getByUserId($id));
+});
+
+/**
 * @OA\Delete(
 *     path="/user/{id}",
 *     tags={"user"},
@@ -131,7 +172,48 @@ Flight::route('PUT /user/password', function(){
 * )
 */
 Flight::route('DELETE /user/@id', function($id){
+   $token = Flight::request()->getHeader("Authentication");
+   Flight::auth_middleware()->verifyToken($token);
+   Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
    Flight::json(Flight::userService()->delete($id));
 });
+
+
+/**
+ * @OA\Patch(
+ *     path="/user/{id}",
+ *     tags={"user"},
+ *     summary="Update user by ID",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         description="ID of the user to update",
+ *         @OA\Schema(type="integer", example=1)
+ *     ),
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             @OA\Property(property="email", type="string", example="new@example.com"),
+ *             @OA\Property(property="name", type="string", example="New Name"),
+ *             @OA\Property(property="role", type="string", example="user")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="User updated successfully"
+ *     )
+ * )
+ */
+Flight::route('PATCH /user/@id', function($id){
+    $token = Flight::request()->getHeader("Authentication");
+    Flight::auth_middleware()->verifyToken($token);
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
+    $data = Flight::request()->data->getData();
+    unset($data['id']);
+    Flight::json(Flight::userService()->updateUser($id, $data));
+});
+
+
 
 ?>

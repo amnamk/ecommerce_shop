@@ -1,27 +1,30 @@
 <?php
-require_once '../services/PaymentBusinessLogic.php';
+require_once 'config.php';  // Your DB connection setup (should define $pdo or similar)
+require_once 'UserDao.php'; // Your UserDao class
 
-$paymentLogic = new PaymentBusinessLogic();
+$testUserId = 25; // Change to a valid user ID in your DB
 
-try {
-    
-    $invalidPaymentData = [
-        'user_id' => 4,
-        'cardholder_name' => 'Amna Test',
-        'card_number' => '123456789012345', 
-        'expiry_date' => '01/28', 
-        'cvv' => '122', 
-        'address' => 'Invalid Address Lane',
-        'state' => 'InvalidState',
-        'shipping_fee' => 4.50
-    ];
+// New data to update
+$updateData = [
+    'email' => 'newemail@example.com',
+    'name'  => 'Updated User Name',
+    'role'  => 'admin'  // Or whatever role you want to test
+];
 
-    $result = $paymentLogic->insertPayment($invalidPaymentData);
-    echo "Success:";
-    print_r($result);
-} catch (Exception $e) {
-    echo " Error: " . $e->getMessage();
+$userDao = new UserDao();
+
+// Attempt to update user
+$success = $userDao->updateUser($testUserId, $updateData);
+
+if ($success) {
+    echo "User updated successfully.\n";
+
+    // Optionally fetch and display the updated user info
+    $updatedUser = $userDao->getByUserId($testUserId);
+    echo "Updated user data:\n<pre>";
+    print_r($updatedUser);
+    echo "</pre>";
+} else {
+    echo "Failed to update user. Either user does not exist or no data was provided to update.\n";
 }
-
 ?>
-

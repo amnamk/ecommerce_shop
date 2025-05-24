@@ -26,6 +26,10 @@ class SpecialProductService extends BaseService {
         return $this->dao->searchByName($name);
     }
 
+    public function getById($id) {
+        return $this->dao->getById($id);
+    }
+
     public function delete($id) {
         $this->dao->delete($id);
     }
