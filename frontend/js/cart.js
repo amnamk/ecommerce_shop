@@ -1,13 +1,54 @@
 $(document).ready(function () {
+  const token = localStorage.getItem("user_token");
+  function parseJwt(token) {
+    try {
+      const base64Url = token.split(".")[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split("")
+          .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+          .join("")
+      );
+      return JSON.parse(jsonPayload);
+    } catch (e) {
+      console.error("Invalid token format", e);
+      return null;
+    }
+  }
+
   function fetchCartData() {
-    $.getJSON("js/cart.json", function (response) {
-      if (response && response.cartItems) {
-        renderCartItems(response.cartItems);
-      } else {
-        console.error("Invalid response data");
-      }
-    }).fail(function (error) {
-      console.error("Error fetching cart data:", error);
+    const token = localStorage.getItem("user_token");
+
+    if (!token) {
+      console.error("No authentication token found.");
+      return;
+    }
+
+    const payload = parseJwt(token);
+    if (!payload || !payload.user || !payload.user.user_id) {
+      console.error("Invalid user token.");
+      return;
+    }
+
+    const userId = payload.user.user_id;
+
+    $.ajax({
+      url: `http://localhost/web_ecommerce_shop/backend/cart/items/user/${userId}`,
+      method: "GET",
+      headers: {
+        Authentication: token,
+      },
+      success: function (response) {
+        if (Array.isArray(response)) {
+          renderCartItems(response);
+        } else {
+          console.error("Invalid response data");
+        }
+      },
+      error: function (xhr, status, error) {
+        console.error("Error fetching cart data:", xhr.responseText || error);
+      },
     });
   }
 
@@ -18,46 +59,67 @@ $(document).ready(function () {
 
     cartItems.forEach((item) => {
       const listItem = `
-        <li class="list-group-item d-flex justify-content-between align-items-center flex-column flex-sm-row" data-item-id="${
-          item.id
-        }">
-          <div class="d-flex align-items-center mb-2 mb-sm-0">
-            <img src="${item.image}" alt="${
+<li class="list-group-item" data-item-id="${
+        item.cart_id
+      }" data-price="${parseFloat(
+        item.price.replace(/[^0-9.-]+/g, "")
+      )}" style="padding: 20px;">
+  <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px;">
+    <img src="${item.picture}" alt="${
         item.name
-      }" class="img-fluid rounded-circle" style="width: 50px; height: 50px; margin-right: 15px" />
-            <span class="text-truncate" style="max-width: 150px;">${
-              item.name
-            } - $${item.price.toFixed(2)}</span>
-          </div>
-          <div class="d-flex align-items-center mb-2 mb-sm-0">
-            <button class="btn btn-outline-secondary btn-sm btn-decrease" data-item-id="${
-              item.id
-            }">-</button>
-            <input type="number" class="form-control mx-2 text-center" style="width: 50px" value="${
-              item.quantity
-            }" min="1" id="quantity-${item.id}" />
-            <button class="btn btn-outline-secondary btn-sm btn-increase" data-item-id="${
-              item.id
-            }">+</button>
-          </div>
-          <div class="d-flex justify-content-end mt-2 mt-sm-0">
-            <button class="btn btn-danger btn-sm btn-remove" data-item-id="${
-              item.id
-            }">Remove</button>
-          </div>
-        </li>
-      `;
+      }" class="rounded-circle" style="width: 50px; height: 50px;" />
+    <span style="font-weight: 600;">${item.name} - $${parseFloat(
+        item.price
+      ).toFixed(2)}</span>
+  </div>
+
+  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+    <label for="quantity-${
+      item.cart_id
+    }" style="min-width: 70px;">Quantity:</label>
+    <input 
+      type="number" 
+      class="form-control text-center" 
+      id="quantity-${item.cart_id}" 
+      value="${item.quantity > 0 ? item.quantity : 1}" 
+      min="1" 
+      style="width: 80px;"
+    />
+    <button class="btn btn-outline-secondary btn-sm btn-increase" data-item-id="${
+      item.cart_id
+    }" type="button" style="padding: 5px 10px;">+</button>
+    <button class="btn btn-outline-secondary btn-sm btn-decrease" data-item-id="${
+      item.cart_id
+    }" type="button" style="padding: 5px 10px;">−</button>
+  </div>
+
+  <div style="text-align: right;">
+    <button class="btn btn-danger btn-sm btn-remove" data-item-id="${
+      item.cart_id
+    }" type="button">Remove</button>
+  </div>
+</li>
+`;
+
       cartItemsList.append(listItem);
-      totalAmount += item.price * item.quantity;
+      const priceNumber = parseFloat(item.price.replace(/[^0-9.-]+/g, ""));
+      totalAmount += priceNumber * item.quantity;
     });
 
     const totalAmountElement = `
-      <li class="list-group-item d-flex justify-content-between">
-        <strong>Total Amount:</strong>
-        <span id="total-amount">$${totalAmount.toFixed(2)}</span>
-      </li>
-    `;
+    <li class="list-group-item d-flex justify-content-between">
+      <strong>Total Amount:</strong>
+      <span id="total-amount">$${totalAmount.toFixed(2)}</span>
+    </li>
+  `;
     cartItemsList.append(totalAmountElement);
+
+    $("#cart-items input[type=number]").each(function () {
+      const val = parseInt($(this).val());
+      if (isNaN(val) || val < 1) {
+        $(this).val(1);
+      }
+    });
 
     attachCartItemEventListeners();
   }
@@ -85,32 +147,92 @@ $(document).ready(function () {
       }
     });
 
-    $(".btn-remove").on("click", function () {
+    $("#cart-items").on("click", ".btn-remove", function () {
       const itemId = $(this).data("item-id");
+      console.log("Removing cart item with ID:", itemId);
+      if (!itemId) {
+        alert("Error: Item ID is undefined.");
+        return;
+      }
       removeCartItem(itemId);
+      updateTotalAmount();
+    });
+
+    $("#cart-items").on("change", "input[type=number]", function () {
+      const itemId = $(this).closest("li").data("item-id");
+      let quantity = parseInt($(this).val());
+
+      if (isNaN(quantity) || quantity < 1) {
+        quantity = 1;
+        $(this).val(quantity);
+      }
+
+      updateCartItemQuantity(itemId, quantity);
       updateTotalAmount();
     });
   }
 
-  function updateCartItemQuantity(itemId, quantity) {
-    console.log(`Updating item ${itemId} quantity to ${quantity}`);
-  }
-
   function removeCartItem(itemId) {
-    console.log(`Removing item ${itemId}`);
-    const cartItemsList = $("#cart-items");
-    cartItemsList.find(`[data-item-id='${itemId}']`).remove();
+    $.ajax({
+      url: `http://localhost/web_ecommerce_shop/backend/cart/item/${itemId}`,
+      type: "DELETE",
+      headers: {
+        Authentication: token,
+      },
+      success: function (response) {
+        console.log(response.message);
+        $(`#cart-items [data-item-id='${itemId}']`).remove();
+      },
+      error: function (xhr) {
+        console.error("Failed to delete item:", xhr.responseText);
+        alert("Error deleting item. Please try again.");
+      },
+    });
+    fetchCartData();
   }
 
   function updateTotalAmount() {
     let totalAmount = 0;
     $("#cart-items li[data-item-id]").each(function () {
-      const itemId = $(this).data("item-id");
-      const quantity = parseInt($("#quantity-" + itemId).val());
-      const price = parseFloat($(this).find("span").text().split(" - $")[1]);
-      totalAmount += price * quantity;
+      const quantity = parseInt($(this).find("input[type=number]").val());
+      const price = parseFloat($(this).data("price"));
+
+      if (!isNaN(price) && !isNaN(quantity)) {
+        totalAmount += price * quantity;
+      } else {
+        console.warn(
+          `Skipping item ${$(this).data(
+            "item-id"
+          )} due to invalid price or quantity`,
+          price,
+          quantity
+        );
+      }
     });
     $("#total-amount").text(`$${totalAmount.toFixed(2)}`);
+  }
+
+  function updateCartItemQuantity(itemId, newQuantity) {
+    const token = localStorage.getItem("user_token");
+
+    $.ajax({
+      url: `http://localhost/web_ecommerce_shop/backend/cart/item/${itemId}`,
+      method: "PUT",
+      contentType: "application/json",
+      headers: {
+        Authentication: token,
+      },
+      data: JSON.stringify({
+        quantity: newQuantity,
+      }),
+      success: function (response) {
+        console.log("Quantity updated successfully:", response.message);
+      },
+      error: function (xhr) {
+        console.error("Failed to update quantity:", xhr.responseText);
+        alert("Error updating quantity. Please try again.");
+      },
+    });
   }
 
   fetchCartData();

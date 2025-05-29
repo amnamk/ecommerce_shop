@@ -47,7 +47,7 @@ class FavoritesDao extends BaseDao {
     public function getAllFavoriteProducts($userId) {
         $stmt = $this->connection->prepare("
             SELECT 
-                p.product_id, p.name, p.description, p.price, p.stock_quantity, p.reviews, p.picture, 'product' AS type
+                f.favorite_id,p.product_id, p.name, p.description, p.price, p.stock_quantity, p.reviews, p.picture, 'product' AS type
             FROM favorites f
             INNER JOIN products p ON f.product_id = p.product_id
             WHERE f.user_id = :user_id
@@ -55,7 +55,7 @@ class FavoritesDao extends BaseDao {
             UNION ALL
             
             SELECT 
-                sp.specialproduct_id AS product_id, 
+                f.favorite_id,sp.specialproduct_id AS product_id, 
                 sp.name, 
                 sp.description, 
                 sp.price, 

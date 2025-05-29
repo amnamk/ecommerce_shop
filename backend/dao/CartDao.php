@@ -78,6 +78,7 @@ class CartDao extends BaseDao {
     public function getAllCartProducts($userId) {
         $stmt = $this->connection->prepare("
             SELECT 
+                c.cart_id,
                 p.product_id, 
                 p.name, 
                 p.description, 
@@ -93,6 +94,7 @@ class CartDao extends BaseDao {
             UNION ALL
             
             SELECT 
+                c.cart_id,
                 sp.specialproduct_id AS product_id, 
                 sp.name, 
                 sp.description, 
@@ -110,6 +112,16 @@ class CartDao extends BaseDao {
         $stmt->execute();
         
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function updateCartItemQuantity($cartItemId, $quantity) {
+        $query = "UPDATE cart SET quantity = :quantity WHERE cart_id = :id";
+        $statement = $this->connection->prepare($query);
+        $statement->bindParam(':quantity', $quantity, PDO::PARAM_INT);
+        $statement->bindParam(':id', $cartItemId, PDO::PARAM_INT);
+        $statement->execute();
+
+        return $statement->rowCount(); 
     }
     
 }

@@ -1,7 +1,20 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 
 require_once __DIR__ . '/vendor/autoload.php';
- 
+require_once __DIR__ . '/data/roles.php';
+
+
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+
+
+require_once __DIR__ . '/services/AuthService.php';
+Flight::register('authService', 'AuthService'); 
+
 require_once __DIR__ . '/services/UserService.php';  
 Flight::register('userService', 'UserService');
 
@@ -30,8 +43,38 @@ require_once __DIR__ . '/routes/FavoritesRoutes.php';
 require_once __DIR__ . '/routes/GeneralRoutes.php';
 require_once __DIR__ . '/routes/PaymentRoutes.php'; 
 require_once __DIR__ . '/routes/ProductRoutes.php';
-require_once __DIR__ . '/routes/SpecialProductsRoutes.php'; 
+require_once __DIR__ . '/routes/SpecialProductsRoutes.php';
+require_once __DIR__ . '/routes/AuthRoutes.php';
 
+
+require_once __DIR__ . '/middleware/AuthMiddleware.php';
+Flight::register('auth_middleware', 'AuthMiddleware');
+
+
+Flight::route('/*', function() {
+    $url = Flight::request()->url;
+
+    
+    if (strpos($url, '/auth/login') === 0 || strpos($url, '/auth/register') === 0) {
+        return TRUE;
+    } else {
+        
+        $token = Flight::request()->getHeader("Authentication");
+        if (!$token) {
+            Flight::halt(401, "Missing authentication header");
+        }
+
+        try {
+            
+            if (Flight::auth_middleware()->verifyToken($token)) {
+                return TRUE;
+            }
+        } catch (\Exception $e) {
+            Flight::halt(401, $e->getMessage());
+        }
+    }
+});
 
 Flight::start();
+
 ?>

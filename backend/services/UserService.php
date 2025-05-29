@@ -19,8 +19,12 @@ class UserService extends BaseService {
     }
 
     public function insertUser($user) {
-        return $this->dao->insert($user);
+    if (isset($user['password'])) {
+        $user['password'] = password_hash($user['password'], PASSWORD_DEFAULT);
     }
+    return $this->dao->insert($user);
+   }
+
 
     public function getUserByRole($role) {
         return $this->dao->getUserByRole($role);
@@ -33,6 +37,18 @@ class UserService extends BaseService {
     public function delete($id) {
         return $this->dao->delete($id);
     }
+
+    public function getByUserId($id) {
+        return $this->dao->getByUserId($id);
+    }
+
+    public function updateUser($id, $data) {
+        return $this->dao->update($id, $data);
+    }
+
+   
+
+
 
     
 

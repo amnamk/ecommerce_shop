@@ -19,6 +19,9 @@
 * )
 */
 Flight::route('GET /general/search/@title', function($title) {
+    $token = Flight::request()->getHeader("Authentication");
+    Flight::auth_middleware()->verifyToken($token);
+    Flight::auth_middleware()->authorizeRoles([Roles::ADMIN, Roles::USER]);
     Flight::json(Flight::generalService()->searchByTitle($title));
 });
 
@@ -42,6 +45,9 @@ Flight::route('GET /general/search/@title', function($title) {
 * )
 */
 Flight::route('GET /general/author/@author', function($author) {
+    $token = Flight::request()->getHeader("Authentication");
+    Flight::auth_middleware()->verifyToken($token);
+    Flight::auth_middleware()->authorizeRoles([Roles::ADMIN, Roles::USER]);
     Flight::json(Flight::generalService()->getByAuthor($author));
 });
 
@@ -58,6 +64,9 @@ Flight::route('GET /general/author/@author', function($author) {
 * )
 */
 Flight::route('GET /general', function() {
+    $token = Flight::request()->getHeader("Authentication");
+    Flight::auth_middleware()->verifyToken($token);
+    Flight::auth_middleware()->authorizeRoles([Roles::ADMIN, Roles::USER]);
     Flight::json(Flight::generalService()->getAll());
 });
 
@@ -87,6 +96,9 @@ Flight::route('GET /general', function() {
 * )
 */
 Flight::route('POST /general', function() {
+    $token = Flight::request()->getHeader("Authentication");
+    Flight::auth_middleware()->verifyToken($token);
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
     $data = Flight::request()->data->getData();
     $result = Flight::generalService()->create($data);
     Flight::json(["message" => "Item created successfully", "id" => $result]);
@@ -112,6 +124,9 @@ Flight::route('POST /general', function() {
 * )
 */
 Flight::route('DELETE /general/@id', function($id) {
+    $token = Flight::request()->getHeader("Authentication");
+    Flight::auth_middleware()->verifyToken($token);
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
     Flight::generalService()->delete($id);
     Flight::json(["message" => "Item deleted successfully"]);
 });
