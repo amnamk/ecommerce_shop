@@ -253,6 +253,5 @@ $(document).ready(function () {
   }
 
   fetchProducts();
-  initializeFiltering();
   initializeSearch();
 });

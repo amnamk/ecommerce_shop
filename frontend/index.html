@@ -22,11 +22,6 @@
     />
 
     <link rel="stylesheet" href="./css/main.css" />
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <script src="../spapp-master/spapp-master/assets/js/jquery.spapp.js"></script>
-    <script src="./js/spa.js"></script>
   </head>
   <body>
     <nav
@@ -115,14 +110,38 @@
       </div>
     </footer>
 
-    <script src="../bootstrap-5.0.2-dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery (always first) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+    <!-- jQuery plugins (must come after jQuery) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.min.js"></script>
+
+    <!-- SPApp must come after jQuery -->
+    <script src="../spapp-master/spapp-master/assets/js/jquery.spapp.js"></script>
+
+    <!-- Bootstrap JS (after jQuery if using jQuery plugins) -->
+    <script src="../bootstrap-5.0.2-dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- DataTables (after jQuery and Bootstrap) -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Toastr (after jQuery) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <!-- Custom utility scripts -->
+    <script src="utils/constants.js"></script>
+    <script src="utils/utils.js"></script>
+
+    <!-- Application service logic -->
     <script src="services/admin-service.js"></script>
     <script src="services/user-service.js"></script>
-    <script src="utils/utils.js"></script>
-    <script src="utils/constants.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <!-- Main SPA logic (should come last) -->
+    <script src="./js/spa.js"></script>
+
+    <!-- Inline startup logic -->
     <script>
       $(document).ready(function () {
         UserService.generateMenuItems();

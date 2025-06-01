@@ -100,11 +100,13 @@ $(document).ready(function () {
       },
       success: function (response) {
         console.log(response.message);
+        toastr.success("Removed successfully!");
         $("#favorites-items").find(`[data-item-id='${itemId}']`).remove();
       },
       error: function (xhr, status, error) {
         console.error("Error deleting favorite:", xhr.responseText || error);
         alert("Failed to remove favorite.");
+        toastr.success("Failed to remove!");
       },
     });
   }

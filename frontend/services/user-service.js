@@ -6,6 +6,27 @@ var UserService = {
     }
 
     $("#login-form").validate({
+      rules: {
+        email: {
+          required: true,
+          email: true,
+        },
+        password: {
+          required: true,
+          minlength: 6,
+          maxlength: 20,
+        },
+      },
+      messages: {
+        email: {
+          required: "Please enter your email",
+          email: "Please enter a valid email address",
+        },
+        password: {
+          required: "Please enter your password",
+          minlength: "Password must be at least 6 characters",
+        },
+      },
       submitHandler: function (form) {
         console.log("Login form is valid, submitting via AJAX...");
         var entity = Object.fromEntries(new FormData(form).entries());
@@ -15,8 +36,41 @@ var UserService = {
 
     $("#register-form").validate({
       rules: {
+        name: {
+          required: true,
+          minlength: 2,
+        },
+        email: {
+          required: true,
+          email: true,
+        },
+        password: {
+          required: true,
+          minlength: 8,
+          maxlength: 20,
+        },
         confirmPassword: {
+          required: true,
           equalTo: "#password",
+        },
+      },
+      messages: {
+        name: {
+          required: "Please enter your name",
+          minlength: "Name must be at least 2 characters",
+        },
+        email: {
+          required: "Please enter your email",
+          email: "Please enter a valid email address",
+        },
+        password: {
+          required: "Please enter a password",
+          minlength: "Password must be at least 8 characters",
+          maxlength: "Password cannot be longer than 20 characters",
+        },
+        confirmPassword: {
+          required: "Please confirm your password",
+          equalTo: "Passwords do not match",
         },
       },
       submitHandler: function (form) {
@@ -89,14 +143,14 @@ var UserService = {
         '<a class="nav-link text-dark" href="#register">Register</a>' +
         "</li>";
 
-      $("#tabs").html(nav);
+      document.getElementById("tabs").innerHTML = nav;
 
       const main =
         '<section id="home" data-load="home.html"></section>' +
         '<section id="login" data-load="login.html"></section>' +
         '<section id="register" data-load="register.html"></section>';
 
-      $("#spapp").html(main);
+      document.getElementById("spapp").innerHTML = main;
 
       return;
     }
@@ -135,16 +189,10 @@ var UserService = {
             '<a class="nav-link text-dark" href="#favorites">Favorites</a>' +
             "</li>" +
             '<li class="nav-item px-2 py-2">' +
-            '<a class="nav-link text-dark" href="#login">Login</a>' +
-            "</li>" +
-            '<li class="nav-item px-2 py-2">' +
-            '<a class="nav-link text-dark" href="#register">Register</a>' +
-            "</li>" +
-            '<li class="nav-item px-2 py-2">' +
             '<a class="nav-link text-dark" href="#profile">Profile</a>' +
             "</li>";
 
-          $("#tabs").html(nav);
+          document.getElementById("tabs").innerHTML = nav;
           main =
             '<section id="home" data-load="home.html"></section>' +
             '<section id="collection" data-load="collection.html"></section>' +
@@ -154,13 +202,12 @@ var UserService = {
             '<section id="popular" data-load="popular.html"></section>' +
             '<section id="cart" data-load="cart.html"></section>' +
             '<section id="favorites" data-load="favorites.html"></section>' +
-            '<section id="login" data-load="login.html"></section>' +
-            ' <section id="register" data-load="register.html"></section>' +
             '<section id="profile" data-load="profile.html"></section>' +
             '<section id="productSection" data-load="productSection.html"></section>' +
             '<section id="payment" data-load="payment.html"></section>' +
             '<section id="success" data-load="success_order.html"></section>';
-          $("#spapp").html(main);
+
+          document.getElementById("spapp").innerHTML = main;
           break;
         case Constants.ADMIN_ROLE:
           console.log("User role:", user.role);
@@ -193,16 +240,12 @@ var UserService = {
             '<a class="nav-link text-dark" href="#favorites">Favorites</a>' +
             "</li>" +
             '<li class="nav-item px-2 py-2">' +
-            '<a class="nav-link text-dark" href="#login">Login</a>' +
-            "</li>" +
-            '<li class="nav-item px-2 py-2">' +
-            '<a class="nav-link text-dark" href="#register">Register</a>' +
-            "</li>" +
             '<li class="nav-item px-2 py-2">' +
             '<a class="nav-link text-dark" href="#profile">Profile</a>' +
             "</li>";
 
-          $("#tabs").html(nav);
+          document.getElementById("tabs").innerHTML = nav;
+
           main =
             '<section id="home" data-load="home.html"></section>' +
             '<section id="collection" data-load="collection.html"></section>' +
@@ -212,18 +255,17 @@ var UserService = {
             '<section id="popular" data-load="popular.html"></section>' +
             '<section id="cart" data-load="cart.html"></section>' +
             '<section id="favorites" data-load="favorites.html"></section>' +
-            '<section id="login" data-load="login.html"></section>' +
-            ' <section id="register" data-load="register.html"></section>' +
             '<section id="profile" data-load="profile.html"></section>' +
             '<section id="productSection" data-load="productSection.html"></section>' +
             '<section id="payment" data-load="payment.html"></section>' +
             '<section id="success" data-load="success_order.html"></section>' +
             ' <section id="admin" data-load="admin_dashboard.html"></section>';
-          $("#spapp").html(main);
+          document.getElementById("spapp").innerHTML = main;
           break;
         default:
-          $("#tabs").html(nav);
-          $("#spapp").html(main);
+          document.getElementById("tabs").innerHTML = nav;
+
+          document.getElementById("spapp").innerHTML = main;
       }
     } else {
       window.location.replace("login.html");

@@ -1,5 +1,6 @@
 $(document).ready(function () {
   const token = localStorage.getItem("user_token");
+
   function parseJwt(token) {
     try {
       const base64Url = token.split(".")[1];
@@ -52,10 +53,21 @@ $(document).ready(function () {
     });
   }
 
+  function updateTotalCost() {
+    let totalCost = 0;
+
+    $("#cart-items li").each(function () {
+      const price = parseFloat($(this).data("price"));
+      const quantity = parseInt($(this).find("input[type=number]").val()) || 1;
+      totalCost += price * quantity;
+    });
+
+    $("#cart-total").html(`Total Cost: $${totalCost.toFixed(2)}`);
+  }
+
   function renderCartItems(cartItems) {
     const cartItemsList = $("#cart-items");
     cartItemsList.empty();
-    let totalAmount = 0;
 
     cartItems.forEach((item) => {
       const listItem = `
@@ -100,19 +112,8 @@ $(document).ready(function () {
   </div>
 </li>
 `;
-
       cartItemsList.append(listItem);
-      const priceNumber = parseFloat(item.price.replace(/[^0-9.-]+/g, ""));
-      totalAmount += priceNumber * item.quantity;
     });
-
-    const totalAmountElement = `
-    <li class="list-group-item d-flex justify-content-between">
-      <strong>Total Amount:</strong>
-      <span id="total-amount">$${totalAmount.toFixed(2)}</span>
-    </li>
-  `;
-    cartItemsList.append(totalAmountElement);
 
     $("#cart-items input[type=number]").each(function () {
       const val = parseInt($(this).val());
@@ -122,6 +123,7 @@ $(document).ready(function () {
     });
 
     attachCartItemEventListeners();
+    updateTotalCost();
   }
 
   function attachCartItemEventListeners() {
@@ -132,7 +134,7 @@ $(document).ready(function () {
       quantity += 1;
       quantityInput.val(quantity);
       updateCartItemQuantity(itemId, quantity);
-      updateTotalAmount();
+      updateTotalCost();
     });
 
     $(".btn-decrease").on("click", function () {
@@ -143,7 +145,7 @@ $(document).ready(function () {
         quantity -= 1;
         quantityInput.val(quantity);
         updateCartItemQuantity(itemId, quantity);
-        updateTotalAmount();
+        updateTotalCost();
       }
     });
 
@@ -154,8 +156,9 @@ $(document).ready(function () {
         alert("Error: Item ID is undefined.");
         return;
       }
+      $(`#cart-items [data-item-id='${itemId}']`).remove();
+      updateTotalCost();
       removeCartItem(itemId);
-      updateTotalAmount();
     });
 
     $("#cart-items").on("change", "input[type=number]", function () {
@@ -168,7 +171,7 @@ $(document).ready(function () {
       }
 
       updateCartItemQuantity(itemId, quantity);
-      updateTotalAmount();
+      updateTotalCost();
     });
   }
 
@@ -180,36 +183,15 @@ $(document).ready(function () {
         Authentication: token,
       },
       success: function (response) {
+        toastr.success("Removed successfully!");
         console.log(response.message);
-        $(`#cart-items [data-item-id='${itemId}']`).remove();
       },
       error: function (xhr) {
         console.error("Failed to delete item:", xhr.responseText);
+        toastr.success("Error removing!");
         alert("Error deleting item. Please try again.");
       },
     });
-    fetchCartData();
-  }
-
-  function updateTotalAmount() {
-    let totalAmount = 0;
-    $("#cart-items li[data-item-id]").each(function () {
-      const quantity = parseInt($(this).find("input[type=number]").val());
-      const price = parseFloat($(this).data("price"));
-
-      if (!isNaN(price) && !isNaN(quantity)) {
-        totalAmount += price * quantity;
-      } else {
-        console.warn(
-          `Skipping item ${$(this).data(
-            "item-id"
-          )} due to invalid price or quantity`,
-          price,
-          quantity
-        );
-      }
-    });
-    $("#total-amount").text(`$${totalAmount.toFixed(2)}`);
   }
 
   function updateCartItemQuantity(itemId, newQuantity) {
@@ -226,10 +208,12 @@ $(document).ready(function () {
         quantity: newQuantity,
       }),
       success: function (response) {
+        toastr.success("Quantity updated successfully!");
         console.log("Quantity updated successfully:", response.message);
       },
       error: function (xhr) {
         console.error("Failed to update quantity:", xhr.responseText);
+        toastr.error("Quantity not updated!");
         alert("Error updating quantity. Please try again.");
       },
     });

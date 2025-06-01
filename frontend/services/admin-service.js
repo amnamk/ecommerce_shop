@@ -1,6 +1,32 @@
 var AdminDashboardService = {
   init: function () {
     $("#addUserForm").validate({
+      rules: {
+        name: "required",
+        email: {
+          required: true,
+          email: true,
+        },
+        password: {
+          required: true,
+          minlength: 6,
+          maxlength: 20,
+        },
+        role: "required",
+      },
+      messages: {
+        name: "Please enter the user's name",
+        email: {
+          required: "Please enter an email",
+          email: "Please enter a valid email address",
+        },
+        password: {
+          required: "Please enter a password",
+          minlength: "Password must be at least 6 characters long",
+          maxlength: "Password cannot be longer than 20 characters",
+        },
+        role: "Please select a role",
+      },
       submitHandler: function (form) {
         var user = Object.fromEntries(new FormData(form).entries());
         AdminDashboardService.addUser(user);
@@ -20,7 +46,7 @@ var AdminDashboardService = {
   },
 
   openAddUserModal: function () {
-    $("#addUserModal").show();
+    $("#addUserModal").modal("show");
   },
 
   addUser: function (user) {
@@ -115,12 +141,14 @@ var AdminDashboardService = {
   },
 
   deleteUser: function () {
+    $.blockUI({ message: "<h3>Processing...</h3>" });
     RestClient.delete(
       "user/" + $("#delete_user_id").val(),
       null,
       function (response) {
         AdminDashboardService.closeUserModal();
         toastr.success("Usser deleted successfully");
+        $.unblockUI();
         AdminDashboardService.getAllUsers();
       },
       function (response) {
