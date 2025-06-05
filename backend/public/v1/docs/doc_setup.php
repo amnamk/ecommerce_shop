@@ -13,7 +13,7 @@
 
 /**
  * @OA\Server(
- *     url="http://localhost/web_ecommerce_shop/backend",
+ *     url="https://urchin-app-a8zw7.ondigitalocean.app",
  *     description="Local development server"
  * )
  */
