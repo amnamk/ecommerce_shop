@@ -84,7 +84,7 @@ var UserService = {
 
   register: function (entity) {
     $.ajax({
-      url: Constants.get_api_base_url + "auth/register",
+      url: Constants.get_api_base_url() + "auth/register",
       type: "POST",
       data: JSON.stringify(entity),
       contentType: "application/json",
@@ -104,7 +104,7 @@ var UserService = {
 
   login: function (entity) {
     $.ajax({
-      url: Constants.get_api_base_url + "auth/login",
+      url: Constants.get_api_base_url() + "auth/login",
       type: "POST",
       data: JSON.stringify(entity),
       contentType: "application/json",
