@@ -7,9 +7,9 @@ error_reporting(E_ALL);
 require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/data/roles.php';
 
-
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+
 
 
 require_once __DIR__ . '/services/AuthService.php';
