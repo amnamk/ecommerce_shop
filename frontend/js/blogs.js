@@ -8,7 +8,7 @@ $(document).ready(function () {
     }
 
     $.ajax({
-      url: "https://urchin-app-a8zw7.ondigitalocean.app//general",
+      url: "https://urchin-app-a8zw7.ondigitalocean.app/general",
       method: "GET",
       headers: {
         Authentication: token,
