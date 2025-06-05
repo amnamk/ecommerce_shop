@@ -83,7 +83,7 @@ $(document).ready(function () {
 
     $.blockUI({ message: "<h3>Processing Payment...</h3>" });
     $.ajax({
-      url: "http://localhost/web_ecommerce_shop/backend/payments",
+      url: "https://urchin-app-a8zw7.ondigitalocean.app/payments",
       method: "POST",
       headers: {
         Authentication: token,

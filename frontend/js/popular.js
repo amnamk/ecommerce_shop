@@ -7,7 +7,7 @@ $(document).ready(function () {
     }
 
     $.ajax({
-      url: "http://localhost/web_ecommerce_shop/backend/products",
+      url: "https://urchin-app-a8zw7.ondigitalocean.app/products",
       method: "GET",
       headers: {
         Authentication: token,

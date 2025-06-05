@@ -33,7 +33,7 @@ $(document).ready(function () {
     const userId = payload.user.user_id;
 
     $.ajax({
-      url: `http://localhost/web_ecommerce_shop/backend/favorites/all/${userId}`,
+      url: `https://urchin-app-a8zw7.ondigitalocean.app/favorites/all/${userId}`,
       method: "GET",
       headers: {
         Authentication: token,
@@ -93,7 +93,7 @@ $(document).ready(function () {
 
   function removeFavoriteItem(itemId) {
     $.ajax({
-      url: `http://localhost/web_ecommerce_shop/backend/favorites/${itemId}`,
+      url: `https://urchin-app-a8zw7.ondigitalocean.app/favorites/${itemId}`,
       method: "DELETE",
       headers: {
         Authentication: token,

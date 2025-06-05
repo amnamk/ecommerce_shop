@@ -24,7 +24,7 @@ $(document).ready(function () {
     }
 
     $.ajax({
-      url: "http://localhost/web_ecommerce_shop/backend/special-products/available",
+      url: "https://urchin-app-a8zw7.ondigitalocean.app/special-products/available",
       method: "GET",
       headers: {
         Authentication: token,
@@ -90,7 +90,7 @@ $(document).ready(function () {
     if (!userId) return alert("Invalid token.");
 
     $.ajax({
-      url: "http://localhost/web_ecommerce_shop/backend/cart",
+      url: "https://urchin-app-a8zw7.ondigitalocean.app/cart",
       method: "POST",
       headers: { Authentication: token },
       contentType: "application/json",
@@ -120,7 +120,7 @@ $(document).ready(function () {
     if (!userId) return alert("Invalid token.");
 
     $.ajax({
-      url: "http://localhost/web_ecommerce_shop/backend/favorites",
+      url: "https://urchin-app-a8zw7.ondigitalocean.app/favorites",
       method: "POST",
       headers: { Authentication: token },
       contentType: "application/json",
