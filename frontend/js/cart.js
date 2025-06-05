@@ -35,7 +35,7 @@ $(document).ready(function () {
     const userId = payload.user.user_id;
 
     $.ajax({
-      url: `http://localhost/web_ecommerce_shop/backend/cart/items/user/${userId}`,
+      url: `https://urchin-app-a8zw7.ondigitalocean.app/cart/items/user/${userId}`,
       method: "GET",
       headers: {
         Authentication: token,
@@ -177,7 +177,7 @@ $(document).ready(function () {
 
   function removeCartItem(itemId) {
     $.ajax({
-      url: `http://localhost/web_ecommerce_shop/backend/cart/item/${itemId}`,
+      url: `https://urchin-app-a8zw7.ondigitalocean.app/cart/item/${itemId}`,
       type: "DELETE",
       headers: {
         Authentication: token,
@@ -198,7 +198,7 @@ $(document).ready(function () {
     const token = localStorage.getItem("user_token");
 
     $.ajax({
-      url: `http://localhost/web_ecommerce_shop/backend/cart/item/${itemId}`,
+      url: `https://urchin-app-a8zw7.ondigitalocean.app/cart/item/${itemId}`,
       method: "PUT",
       contentType: "application/json",
       headers: {
