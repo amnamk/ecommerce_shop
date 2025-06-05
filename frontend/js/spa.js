@@ -33,15 +33,6 @@ $(document).ready(function () {
     }
   }
 
-  function fetchProducts() {
-    $.getJSON("js/products.json", function (data) {
-      var products = data.products;
-      renderProducts(products);
-    }).fail(function (error) {
-      console.error("Error fetching products data:", error);
-    });
-  }
-
   function fetchSpecialProducts() {
     $.getJSON("js/specialproducts.json", function (data) {
       var specialProducts = data.specialProducts;
@@ -267,6 +258,7 @@ $(document).ready(function () {
   app.route({
     view: "admin",
     load: "admin_dashboard.html",
+    onCreate: AdminDashboardService.getAllUsers,
   });
 
   app.route({
@@ -354,4 +346,37 @@ $(document).ready(function () {
   });
 
   app.run();
+
+  const currentHash = window.location.hash;
+
+  switch (currentHash) {
+    case "#/collection":
+      $.getScript("js/products.js", function () {
+        fetchProducts();
+        initializeSearch();
+        initializeFiltering();
+      });
+      break;
+    case "#/special":
+      fetchSpecialProducts();
+      break;
+    case "#/favorites":
+      renderFavorites();
+      break;
+    case "#/popular":
+      $.getScript("js/popular.js", function () {
+        fetchPopularProducts();
+      });
+      break;
+    case "#/blogs":
+      fetchBlogs();
+      break;
+    case "#/cart":
+      $.getJSON("js/cart.json", function (response) {
+        renderCartItems(response.cartItems);
+      }).fail(function (error) {
+        console.error("Error fetching cart data:", error);
+      });
+      break;
+  }
 });
