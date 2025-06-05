@@ -3,7 +3,7 @@ let Constants = {
     if (location.hostname === "localhost") {
       return "http://localhost/web_ecommerce_shop/backend/";
     } else {
-      return "https://urchin-app-a8zw7.ondigitalocean.app/backend/";
+      return "https://urchin-app-a8zw7.ondigitalocean.app/";
     }
   },
   USER_ROLE: "user",
